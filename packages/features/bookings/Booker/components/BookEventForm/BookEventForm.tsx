@@ -156,12 +156,19 @@ export const BookEventForm = ({ onCancel }: BookEventFormProps) => {
   const createBookingMutation = useMutation(createBooking, {
     onSuccess: async (responseData) => {
       const { uid, paymentUid } = responseData;
+      const name = bookingForm.getValues("responses.name");
+      let nameString = "";
+      if (typeof name === "string") {
+        nameString = name;
+      } else {
+        nameString = name.firstName + " " + name.lastName;
+      }
       if (paymentUid) {
         return await router.push(
           createPaymentLink({
             paymentUid,
             date: timeslot,
-            name: bookingForm.getValues("responses.name"),
+            name: nameString,
             email: bookingForm.getValues("responses.email"),
             absolute: false,
           })
